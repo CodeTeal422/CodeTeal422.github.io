@@ -1,9 +1,33 @@
 <!DOCTYPE html>
 <html>
-<title>Test</title>
+    <head>
+        <title>Main Page</title>  
+        <style>
+            .myDiv{
+                display: grid;
+                grid-template-columns: auto auto auto;
+            }
+            .innerDiv{
+                text-align: center;
+            }
+        </style>  
+    </head>
+
 <body>
-<p>this website is testing how to use github for dealing with CORS</p>
-<p>still work in progress.</p>
-<a href="maze/mazeDrawer.html">go to maze</a>
+    <div class="myDiv">
+        <div class="innerDiv">
+            <a href="Checker/checker.html"><img src="pictures/CheckersIcon.png" alt="Play Checkers"></a>
+            <p>Checkers</p>
+        </div>
+        <div class="innerDiv">
+            <a href="TicTacToe/TicTacToe.html"><img src="pictures/TicTacToeIcon.png" alt="Play Tic Tac Toe"></a>
+            <p>TicTacToe</p>
+        </div>
+        <div class="innerDiv">
+            <a href="maze/mazeDrawer.html"><img src="pictures/MazeIcon.png" alt="Look at a maze"></a>
+            <p>Maze Generator</p>
+        </div>
+    </div>
 </body>
+
 </html>
