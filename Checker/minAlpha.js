@@ -1,4 +1,8 @@
 var minAlpha = {
+    update: function(input){
+    },
+    endGame: function(win, player){
+    },
     set2dRay: function(array){
         let output = [];
         for(let i = 0; i < array.length; i++){
@@ -6,7 +10,7 @@ var minAlpha = {
         }
         return output;
     },
-    movesAhead: 10,
+    movesAhead: 13,
     whichSide: -1,
     skips: [0,0,0,0,0,0,0,0,0,0,0,0],
     findNumbers: function(board){
@@ -58,9 +62,8 @@ var minAlpha = {
         return currentScore;
     },
     solve: function(dataSet, dataChangeNum = 0, numDir = 0, currentIteration = 0, alpha = -101, beta = 101){
-        currentIteration++;
-
-        if(currentIteration === 1){
+        //set up which side, and move if there is only one move.
+        if(currentIteration === 0){
             minAlpha.whichSide = dataSet.whoTurn;//make sure that it is going for the right side
             let temp = rules.possibleMoves(dataSet);
             if(temp.length === 1 && temp[0][2].length === 1){
@@ -68,6 +71,10 @@ var minAlpha = {
             }
         }
 
+        //iterate
+        currentIteration++;
+
+        //set up data
         let newDataSet = {
             board: minAlpha.set2dRay(dataSet.board),
             limit: dataSet.limit,
@@ -80,6 +87,7 @@ var minAlpha = {
 		    doneMoving: dataSet.doneMoving,
         };
 
+        //update data to current board postion
         if(currentIteration > 1){
         let input = rules.possibleMoves(newDataSet);
         let x  = input[dataChangeNum][0];
@@ -89,14 +97,22 @@ var minAlpha = {
         }
         
 
+        //tree building 
         let output = [];
         let posMoves = rules.possibleMoves(newDataSet);
         let stop = false;
+
+        //only one possible move, so it is easy to find more information.
+        if(posMoves.length == 1 && posMoves[0].length == 1){currentIteration--;}
+
         if(currentIteration <= minAlpha.movesAhead && posMoves.length > 0){
+
             for(let i = 0; i < posMoves.length; i++){
                 for(let j = 0; j < posMoves[i][2].length; j++){
+
                     let temp = minAlpha.solve(newDataSet, i, j, currentIteration, alpha, beta);
                     output.push(temp);
+
                     if(newDataSet.whoTurn * minAlpha.whichSide !== 1){//change
                         //min
                         beta = beta < temp? beta: temp;
@@ -106,16 +122,24 @@ var minAlpha = {
                         alpha = alpha > temp? alpha: temp;
                         if(beta <= alpha){stop = true; break;}
                     }
+
                 }
                 if(stop == true){
                     minAlpha.skips[currentIteration]++;
                     break;
                 }
             }
+
         }else {
             return minAlpha.score(newDataSet);
         }
 
+
+
+        /*
+        if the current iteration is the first then it will find what move to return
+        else it will disided what the the current player would choose.
+         */
         if(currentIteration == 1){
             let maxNum = output[0];
             let maxPos = 0;
@@ -174,6 +198,8 @@ var minAlpha = {
 
         //score
     },
+
+
     masterPlan: function(dataSet){
         let plan = this.solve(dataSet);
         rules.filterMove(dataSet,plan[0],plan[1],plan[2]);
