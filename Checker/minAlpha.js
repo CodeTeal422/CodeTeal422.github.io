@@ -10,7 +10,7 @@ var minAlpha = {
         }
         return output;
     },
-    movesAhead: 13,
+    movesAhead: 11,
     whichSide: -1,
     skips: [0,0,0,0,0,0,0,0,0,0,0,0],
     findNumbers: function(board){
